@@ -24,3 +24,20 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.perspective {
+  perspective: 1000px; /* creates 3D perspective */
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d; /* keeps front & back in 3D space */
+}
+
+.backface-hidden {
+  backface-visibility: hidden; /* hides back face when flipped */
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
