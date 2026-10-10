@@ -1,38 +1,77 @@
+import { education, highlights, profile } from '../data/portfolio';
+import { ArrowIcon, Section } from './ui';
+
 const About = () => (
-  <section
-    id="about"
-    className="min-h-screen flex flex-col items-center justify-center px-6 py-16 
-               bg-gradient-to-b from-blue-50 to-blue-100 text-gray-900"
-  >
-    <h2 className="text-4xl md:text-6xl font-bold mb-10 animate-fadeIn">
-      About Me
-    </h2>
+  <Section id="about" eyebrow="01 / About" title="Systems depth, applied to real problems">
+    <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr]">
+      <div className="space-y-8">
+        <div>
+          <h3 className="font-mono text-xs uppercase tracking-widest text-muted">Currently</h3>
+          <ul className="mt-3 space-y-2">
+            {profile.currently.map((c) => (
+              <li key={c} className="flex gap-3 text-fg/90">
+                <span className="mt-2.5 h-1 w-3 shrink-0 bg-accent" aria-hidden="true" />
+                {c}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-    <div className="max-w-3xl text-center space-y-6 md:text-lg text-gray-900">
-      <p>
-        I’m Aakanksha Trivedi, a Computer Science graduate student at Purdue University Northwest, passionate about networking, kernel programming, and scalable systems.
-      </p>
+        <div>
+          <h3 className="font-mono text-xs uppercase tracking-widest text-muted">Interests</h3>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {profile.interests.map((i) => (
+              <li key={i} className="rounded-full border border-line bg-surface px-3 py-1.5 text-sm text-fg/85">
+                {i}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <p>
-        My experience spans high-performance networking with XDP and eBPF, research in distributed systems, and real-world projects focused on security and performance optimization.
-      </p>
+        <div>
+          <h3 className="font-mono text-xs uppercase tracking-widest text-muted">Education</h3>
+          <ul className="mt-3 space-y-4">
+            {education.map((e) => (
+              <li key={e.degree} className="rounded-xl border border-line bg-surface p-5">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <p className="font-semibold text-fg">{e.degree}</p>
+                  <p className="font-mono text-xs text-muted">{e.period}</p>
+                </div>
+                <p className="mt-1 text-sm text-muted">
+                  {e.school} · {e.location}
+                </p>
+                <ul className="mt-3 space-y-1 text-sm text-fg/80">
+                  {e.details.map((d) => (
+                    <li key={d}>{d}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
-      <p>
-        Beyond research, I enjoy solving complex problems, contributing to open-source tools, and exploring innovative solutions in system design and cybersecurity.
-      </p>
+      <div>
+        <h3 className="font-mono text-xs uppercase tracking-widest text-muted">Engineering highlights</h3>
+        <ol className="mt-3 divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface">
+          {highlights.map((h, i) => (
+            <li key={h.title}>
+              <a href={h.href} className="group flex gap-4 p-5 transition-colors hover:bg-surface-2">
+                <span className="font-mono text-xs text-accent">{String(i + 1).padStart(2, '0')}</span>
+                <span className="flex-1">
+                  <span className="flex items-center justify-between gap-2 font-medium text-fg">
+                    {h.title}
+                    <ArrowIcon className="h-4 w-4 shrink-0 text-muted transition group-hover:translate-x-0.5 group-hover:text-accent" />
+                  </span>
+                  <span className="mt-1 block text-sm text-muted">{h.description}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
-
-    <div className="mt-12 flex flex-wrap justify-center gap-4">
-      {["XDP", "eBPF", "Kernel Programming", "Distributed Systems", "System Design", "Networking", "Cybersecurity"].map(skill => (
-        <span 
-          key={skill} 
-          className="px-4 py-2 bg-white/30 backdrop-blur-md rounded-full text-sm font-medium text-gray-900 transition"
-        >
-          {skill}
-        </span>
-      ))}
-    </div>
-  </section>
+  </Section>
 );
 
 export default About;
