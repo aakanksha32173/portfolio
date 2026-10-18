@@ -1,91 +1,113 @@
 import Image from 'next/image';
-import { links, profile } from '../data/portfolio';
-import { ArrowIcon, FileIcon, GitHubIcon, LinkedInIcon } from './ui';
+import Link from 'next/link';
+import { links, profile, projectHref, stack } from '../data/portfolio';
+import { FileIcon } from './ui';
 
-const HeroSection = () => {
+function Avatar() {
   return (
-    <section id="hero" aria-labelledby="hero-heading" className="relative overflow-hidden">
-      <div className="bg-grid pointer-events-none absolute inset-0" aria-hidden="true" />
-      <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col items-center justify-center gap-12 px-4 pb-16 pt-28 sm:px-6 md:flex-row md:justify-between md:gap-16">
-        {/* Left Side: Text */}
-        <div className="fade-up flex-1">
-          <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1 font-mono text-xs text-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
-            Available for full-time roles from Jan 2027
-          </p>
-          <h1 id="hero-heading" className="mt-6 text-4xl font-semibold tracking-tight text-fg sm:text-5xl md:text-6xl">
-            {profile.name}
-          </h1>
-          <p className="mt-3 font-mono text-sm text-accent">{profile.roles.join('  ·  ')}</p>
-          <p className="mt-6 max-w-xl text-2xl font-medium leading-snug text-fg/90 md:text-3xl">{profile.tagline}</p>
-          <div className="mt-6 max-w-xl space-y-3 text-muted">
-            {profile.intro.map((p) => (
-              <p key={p}>{p}</p>
-            ))}
+    <div tabIndex={0} aria-label="Profile photo; hover or focus to flip" className="group perspective h-16 w-16 shrink-0 rounded-full sm:h-20 sm:w-20">
+      <div className="transform-style-preserve-3d relative h-full w-full duration-700 group-hover:rotate-y-180 group-focus-visible:rotate-y-180 motion-reduce:duration-0">
+        {['/profile1.jpg', '/profile2.jpg'].map((src, i) => (
+          <div key={src} className={`backface-hidden absolute inset-0 overflow-hidden rounded-full border border-line ${i ? 'rotate-y-180' : ''}`}>
+            <Image src={src} alt={i ? '' : profile.name} fill priority={!i} sizes="80px" className="object-cover" />
           </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-bg transition hover:brightness-110"
-            >
-              View Projects <ArrowIcon className="h-4 w-4" />
-            </a>
-            <a
-              href={links.resume}
-              download="Aakanksha-Trivedi-Resume.pdf"
-              className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-5 py-2.5 text-sm font-medium text-fg transition hover:border-accent/60"
-            >
-              <FileIcon className="h-4 w-4" /> Download Resume
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition hover:text-accent"
-            >
-              Contact Me
-            </a>
-            <a href={links.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" className="p-2 text-muted hover:text-accent">
-              <GitHubIcon className="h-5 w-5" />
-            </a>
-            <a href={links.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" className="p-2 text-muted hover:text-accent">
-              <LinkedInIcon className="h-5 w-5" />
-            </a>
+// Kernel → cloud: a map of where each project sits in the stack. The dot is decorative.
+function StackVisual() {
+  return (
+    <div className="tile flex h-full flex-col p-5 sm:p-6">
+      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">Where my work sits</p>
+      <div className="relative mt-4 flex flex-1 flex-col">
+        <div className="absolute bottom-5 left-[7px] top-5 w-px bg-line" aria-hidden="true">
+          <div className="vflow-run" aria-hidden="true">
+            <span />
+          </div>
+        </div>
+        <ol className="flex flex-1 flex-col justify-between gap-2">
+          {stack.map((row, i) => (
+            <li key={row.layer} className="relative flex items-start gap-4 pl-6">
+              <span
+                className={`absolute left-[3px] top-[7px] h-[9px] w-[9px] rounded-full border-2 bg-bg ${
+                  i === stack.length - 1 ? 'border-accent' : 'border-muted/60'
+                }`}
+                aria-hidden="true"
+              />
+              <div className="min-w-0">
+                <p className="font-mono text-xs text-muted">{row.layer}</p>
+                <p className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
+                  {row.items.map((it) => (
+                    <Link key={it.slug} href={projectHref(it.slug)} className="text-[15px] font-medium text-fg underline-offset-4 hover:text-accent hover:underline">
+                      {it.label}
+                    </Link>
+                  ))}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  );
+}
+
+export default function Hero() {
+  return (
+    <section id="top" aria-labelledby="hero-heading" className="mx-auto max-w-6xl scroll-mt-20 px-4 pt-20 sm:px-6 md:pt-24">
+      <div className="grid gap-4 lg:grid-cols-12">
+        <div className="tile relative min-w-0 overflow-hidden p-5 sm:p-8 lg:col-span-7">
+          <div className="bg-grid pointer-events-none absolute inset-0" aria-hidden="true" />
+          <div className="fade-up relative">
+            <div className="flex items-center gap-4">
+              <Avatar />
+              <div>
+                <h1 id="hero-heading" className="text-3xl font-semibold tracking-tight text-fg sm:text-4xl">
+                  {profile.name}
+                </h1>
+                <p className="mt-1 font-mono text-xs text-accent sm:text-sm">{profile.identity}</p>
+              </div>
+            </div>
+
+            <p className="mt-7 max-w-xl text-2xl font-medium leading-tight tracking-tight text-fg sm:text-[2rem]">{profile.headline}</p>
+            <p className="mt-4 max-w-xl text-muted">{profile.summary}</p>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <a
+                href={links.resume}
+                download={links.resumeFileName}
+                className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-bg transition hover:brightness-110"
+              >
+                <FileIcon className="h-4 w-4" /> Download resume
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center rounded-lg border border-line bg-surface-2 px-4 py-2.5 text-sm font-medium text-fg transition hover:border-accent/60"
+              >
+                Get in touch
+              </a>
+            </div>
+
+            <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 border-t border-line pt-5 text-sm text-muted">
+              <li>
+                {profile.degree} · {profile.school}
+              </li>
+              <li>Graduating {profile.graduation}</li>
+              <li className="inline-flex items-center gap-2 text-fg">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
+                {profile.availability}
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Right Side: Flip Card (hover or keyboard focus to flip) */}
-        <div className="flex flex-1 justify-center md:justify-end">
-          <div
-            tabIndex={0}
-            aria-label="Profile photos of Aakanksha Trivedi. Hover or focus to flip."
-            className="group perspective h-64 w-64 rounded-2xl sm:h-80 sm:w-80 md:h-96 md:w-96"
-          >
-            <div className="transform-style-preserve-3d relative h-full w-full duration-700 group-hover:rotate-y-180 group-focus-visible:rotate-y-180 motion-reduce:duration-0">
-              <div className="backface-hidden absolute h-full w-full overflow-hidden rounded-2xl border border-line shadow-2xl shadow-black/40">
-                <Image
-                  src="/profile1.jpg"
-                  alt="Aakanksha Trivedi"
-                  fill
-                  priority
-                  sizes="(min-width: 768px) 384px, (min-width: 640px) 320px, 256px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="backface-hidden rotate-y-180 absolute h-full w-full overflow-hidden rounded-2xl border border-line shadow-2xl shadow-black/40">
-                <Image
-                  src="/profile2.jpg"
-                  alt="Aakanksha Trivedi"
-                  fill
-                  sizes="(min-width: 768px) 384px, (min-width: 640px) 320px, 256px"
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          </div>
+        <div className="min-w-0 lg:col-span-5">
+          <StackVisual />
         </div>
       </div>
     </section>
   );
-};
-
-export default HeroSection;
+}

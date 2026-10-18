@@ -1,34 +1,21 @@
-import HeroSection from '../components/Hero';
-import AboutSection from '../components/About';
-import ProjectsSection from '../components/Project';
-import ExperienceSection from '../components/Experience';
-import { Publications, Research } from '../components/Research';
-import SkillsSection from '../components/Skills';
-import LeadershipSection from '../components/Leadership';
-import FooterSection from '../components/Footer';
-import Navbar from '../components/Navbar';
+import Contact from '../components/Contact';
+import Experience from '../components/Experience';
+import Hero from '../components/Hero';
+import Highlights from '../components/Highlights';
+import Projects from '../components/Projects';
+import Skills from '../components/Skills';
 
 export default function Page() {
   return (
-    <>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-bg"
-      >
-        Skip to content
-      </a>
-      <Navbar />
-      <main id="main">
-        <HeroSection />
-        <AboutSection />
-        <ExperienceSection />
-        <ProjectsSection />
-        <Research />
-        <Publications />
-        <SkillsSection />
-        <LeadershipSection />
-      </main>
-      <FooterSection />
-    </>
+    <main id="main">
+      <Hero />
+      <Highlights />
+      <Experience />
+      <Projects />
+      <div className="mx-auto grid max-w-6xl gap-4 px-4 pb-14 pt-4 sm:px-6 lg:grid-cols-12">
+        <Skills />
+        <Contact />
+      </div>
+    </main>
   );
 }

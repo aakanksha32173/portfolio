@@ -1,44 +1,52 @@
 import type { ReactNode, SVGProps } from 'react';
 
+export function SectionHeader({ id, eyebrow, title, aside }: { id: string; eyebrow: string; title: string; aside?: ReactNode }) {
+  return (
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent">{eyebrow}</p>
+        <h2 id={`${id}-heading`} className="mt-1.5 text-2xl font-semibold tracking-tight text-fg md:text-3xl">
+          {title}
+        </h2>
+      </div>
+      {aside}
+    </div>
+  );
+}
+
 export function Section({
   id,
   eyebrow,
   title,
-  intro,
+  aside,
   children,
 }: {
   id: string;
   eyebrow: string;
   title: string;
-  intro?: string;
+  aside?: ReactNode;
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-heading`} className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 md:py-28">
-      <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">{eyebrow}</p>
-      <h2 id={`${id}-heading`} className="mt-3 text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-        {title}
-      </h2>
-      {intro && <p className="mt-4 max-w-2xl text-muted">{intro}</p>}
-      <div className="mt-12">{children}</div>
+    <section id={id} aria-labelledby={`${id}-heading`} className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 md:py-10">
+      <SectionHeader id={id} eyebrow={eyebrow} title={title} aside={aside} />
+      {children}
     </section>
   );
 }
 
-export function Tag({ children }: { children: ReactNode }) {
-  return (
-    <li className="rounded-md border border-line bg-surface-2 px-2 py-1 font-mono text-[11px] leading-none text-muted">
-      {children}
-    </li>
-  );
-}
-
-export function TagList({ items, label }: { items: string[]; label: string }) {
+export function TagList({ items, label, max }: { items: string[]; label: string; max?: number }) {
+  const shown = max ? items.slice(0, max) : items;
   return (
     <ul aria-label={label} className="flex flex-wrap gap-1.5">
-      {items.map((t) => (
-        <Tag key={t}>{t}</Tag>
+      {shown.map((t) => (
+        <li key={t} className="rounded-md border border-line bg-surface-2 px-2 py-1 font-mono text-[11px] leading-none text-muted">
+          {t}
+        </li>
       ))}
+      {max && items.length > max && (
+        <li className="px-1 py-1 font-mono text-[11px] leading-none text-muted">+{items.length - max}</li>
+      )}
     </ul>
   );
 }
@@ -50,7 +58,7 @@ export function Badge({ children, tone = 'default' }: { children: ReactNode; ton
     warn: 'border-accent/40 text-accent',
   };
   return (
-    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 font-mono text-[11px] ${tones[tone]}`}>
+    <span className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 font-mono text-[11px] ${tones[tone]}`}>
       {children}
     </span>
   );
@@ -87,5 +95,32 @@ export const FileIcon = (p: IconProps) => (
 export const ArrowIcon = (p: IconProps) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" {...p}>
     <path d="M5 12h14m-6-6 6 6-6 6" />
+  </svg>
+);
+
+export const SearchIcon = (p: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" {...p}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+);
+
+export const TerminalIcon = (p: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" {...p}>
+    <rect x="3" y="4" width="18" height="16" rx="2" />
+    <path d="m7 9 3 3-3 3M13 15h4" />
+  </svg>
+);
+
+export const CloseIcon = (p: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true" {...p}>
+    <path d="M6 6l12 12M18 6 6 18" />
+  </svg>
+);
+
+export const CopyIcon = (p: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden="true" {...p}>
+    <rect x="9" y="9" width="11" height="11" rx="2" />
+    <path d="M5 15V5a2 2 0 0 1 2-2h8" />
   </svg>
 );

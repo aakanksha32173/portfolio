@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 import { links, profile, publications } from "../data/portfolio";
 import "./globals.css";
 
@@ -15,10 +17,10 @@ const geistMono = Geist_Mono({
 
 const title = `${profile.name} | Software, AI/ML & Systems Security Engineer`;
 const description =
-  "CS graduate student at Purdue University Northwest building kernel-level network security with eBPF/XDP, AI/ML applications, backend automation, and GPU-accelerated digital twins. Open to full-time roles from January 2027.";
+  "CS graduate student at Purdue University Northwest building eBPF/XDP network security, applied AI, backend automation, and GPU-accelerated digital twins. Open to full-time roles from January 2027.";
 
 export const metadata: Metadata = {
-  title,
+  title: { default: title, template: `%s | ${profile.name}` },
   description,
   authors: [{ name: profile.name }],
   keywords: [
@@ -53,13 +55,16 @@ const jsonLd = {
   name: profile.name,
   jobTitle: profile.roles.join(", "),
   email: `mailto:${links.email}`,
-  affiliation: { "@type": "CollegeOrUniversity", name: "Purdue University Northwest" },
+  affiliation: { "@type": "CollegeOrUniversity", name: profile.school },
   alumniOf: { "@type": "CollegeOrUniversity", name: "Institute of Engineering & Technology, Devi Ahilya University" },
   sameAs: [links.github, links.linkedin],
   knowsAbout: ["eBPF", "XDP", "Network Security", "Machine Learning", "Linux Kernel", "Digital Twins", "RAG"],
-  subjectOf: publications
-    .filter((p) => p.doi)
-    .map((p) => ({ "@type": "ScholarlyArticle", name: p.title, sameAs: `https://doi.org/${p.doi}` })),
+  subjectOf: publications.map((p) => ({
+    "@type": "ScholarlyArticle",
+    name: p.title,
+    url: p.url,
+    sameAs: `https://doi.org/${p.doi}`,
+  })),
 };
 
 export default function RootLayout({
@@ -69,11 +74,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[60] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-bg"
+        >
+          Skip to content
+        </a>
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
